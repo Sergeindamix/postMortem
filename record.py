@@ -1,5 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect
+from pyngrok import ngrok
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -16,8 +18,12 @@ def record():
     # Obtener el archivo de audio grabado desde el formulario
     audio = request.files['audio']
 
+    # Generar un nombre de archivo único utilizando la fecha y hora actual
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    filename = f'recording_{timestamp}.wav'
+
     # Guardar el archivo de audio en la carpeta de grabaciones
-    audio.save(os.path.join('static/recordings', audio.filename))
+    audio.save(os.path.join('static/recordings', filename))
 
     # Redireccionar al inicio después de la grabación
     return redirect('/')
