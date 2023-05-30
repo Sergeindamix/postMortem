@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Información Personal</title>
+</head>
+<body>
+    <h1>Formulario de Información Personal</h1>
+
+    <h2>Contactos de Emergencia</h2>
+    <form id="emergency-contacts-form">
+        <label for="emergency-contact1-name">Nombre del Contacto 1:</label>
+        <input type="text" id="emergency-contact1-name" name="emergency-contact1-name" required><br>
+
+        <label for="emergency-contact1-phone">Teléfono del Contacto 1:</label>
+        <input type="tel" id="emergency-contact1-phone" name="emergency-contact1-phone" required><br>
+
+        <label for="emergency-contact2-name">Nombre del Contacto 2:</label>
+        <input type="text" id="emergency-contact2-name" name="emergency-contact2-name" required><br>
+
+        <label for="emergency-contact2-phone">Teléfono del Contacto 2:</label>
+        <input type="tel" id="emergency-contact2-phone" name="emergency-contact2-phone" required><br>
+    </form>
+
+    <h2>Detalles de Seguros</h2>
+    <form id="insurance-details-form">
+        <label for="insurance-company">Compañía de Seguros:</label>
+        <input type="text" id="insurance-company" name="insurance-company" required><br>
+
+        <label for="insurance-policy-number">Número de Póliza:</label>
+        <input type="text" id="insurance-policy-number" name="insurance-policy-number" required><br>
+    </form>
+
+    <h2>Información Médica Relevante</h2>
+    <form id="medical-info-form">
+        <label for="blood-type">Tipo de Sangre:</label>
+        <input type="text" id="blood-type" name="blood-type" required><br>
+
+        <label for="allergies">Alergias:</label>
+        <input type="text" id="allergies" name="allergies"><br>
+
+        <label for="medications">Medicamentos:</label>
+        <input type="text" id="medications" name="medications"><br>
+    </form>
+
+    <h2>Cuentas en Línea y Contraseñas</h2>
+    <form id="online-accounts-form">
+        <label for="online-account1">Cuenta en Línea 1:</label>
+        <input type="text" id="online-account1" name="online-account1" required><br>
+
+        <label for="online-account1-password">Contraseña de la Cuenta 1:</label>
+        <input type="password" id="online-account1-password" name="online-account1-password" required><br>
+
+        <label for="online-account2">Cuenta en Línea 2:</label>
+        <input type="text" id="online-account2" name="online-account2" required><br>
+
+        <label for="online-account2-password">Contraseña de la Cuenta 2:</label>
+        <input type="password" id="online-account2-password" name="online-account2-password" required><br>
+
+    </form>
+
+    <button onclick="mostrarDatos()">Mostrar Datos</button>
+
+    <script>
+        function mostrarDatos() {
+            var datos = {};
+
+            // Obtener datos de contactos de emergencia
+            datos['emergencyContact1'] = {
+                'nombre': document.getElementById('emergency-contact1-name').value,
+                'telefono': document.getElementById('emergency-contact1-phone').value
+            };
+            datos['emergencyContact2'] = {
+                'nombre': document.getElementById('emergency-contact2-name').value,
+                'telefono': document.getElementById('emergency-contact2-phone').value
+            };
+
+            // Obtener datos de detalles de seguros
+            datos['insuranceDetails'] = {
+                'compania': document.getElementById('insurance-company').value,
+                'numeroPoliza': document.getElementById('insurance-policy-number').value
+            };
+
+            // Obtener datos de información médica relevante
+            datos['medicalInfo'] = {
+                'tipoSangre': document.getElementById('blood-type').value,
+                'alergias': document.getElementById('allergies').value,
+                'medicamentos': document.getElementById('medications').value
+            };
+
+            // Obtener datos de cuentas en línea y contraseñas
+            datos['onlineAccounts'] = {
+                'cuenta1': {
+                    'cuenta': document.getElementById('online-account1').value,
+                    'contrasena': document.getElementById('online-account1-password').value
+                },
+                'cuenta2': {
+                    'cuenta': document.getElementById('online-account2').value,
+                    'contrasena': document.getElementById('online-account2-password').value
+                }
+            };
+
+            // Mostrar los datos en el navegador
+            var datosString = JSON.stringify(datos, null, 2);
+            document.body.innerHTML += '<pre>' + datosString + '</pre>';
+
+            // Guardar los datos en un archivo JSON
+            var jsonBlob = new Blob([datosString], { type: 'application/json' });
+            var jsonURL = URL.createObjectURL(jsonBlob);
+
+            var a = document.createElement('a');
+            a.href = jsonURL;
+            a.download = 'datos.json';
+            a.click();
+        }
+    </script>
+</body>
+</html>
