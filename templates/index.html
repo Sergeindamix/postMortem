@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mensajes y Deseos Personales</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Función para reproducir el archivo de audio seleccionado
+        function playAudio(filename) {
+            var audio = new Audio('static/recordings/' + filename);
+            audio.play();
+        }
+    </script>
+</head>
+<body>
+    <h1>Mensajes y Deseos Personales</h1>
+
+    <h2>Grabar nuevo mensaje</h2>
+    <form action="/record" method="post" enctype="multipart/form-data">
+        <input type="file" name="audio" accept="audio/*" required>
+        <input type="submit" value="Grabar">
+    </form>
+
+    <h2>Mensajes Grabados</h2>
+    <ul>
+        {% for file in files %}
+        <li>
+            {{ file }}
+            <button onclick="playAudio('{{ file }}')">Reproducir</button>
+            <a href="/delete/{{ file }}">Borrar</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
