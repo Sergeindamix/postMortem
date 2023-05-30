@@ -54,7 +54,7 @@ def registrar():
     # Redireccionar a una página de confirmación o agradecimiento
     return render_template('confirmacion.html', nombre=nombre)
 
-!ngrok config add-authtoken 2PvAm0udpW3DJmtEimTfGfsWe24_4tLCLKofoNNPk28rrT72F
+
 # Iniciar el túnel con Ngrok
 public_url = ngrok.connect(5000).public_url
 print('Public URL:', public_url)
