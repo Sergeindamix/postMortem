@@ -3,6 +3,14 @@ from flask import Flask, render_template, request, redirect
 from pyngrok import ngrok
 from datetime import datetime
 
+# Ruta del directorio "static/recordings"
+directorio = "static/recordings"
+
+# Verificar si el directorio existe
+if not os.path.exists(directorio):
+    # Crear el directorio si no existe
+    os.makedirs(directorio)
+    
 app = Flask(__name__)
 
 # Ruta de inicio
