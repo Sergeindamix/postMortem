@@ -1,6 +1,5 @@
 cryptography
 python-docx
 flask
-pyaudio
 pyngrok
 streamlit
