@@ -1,13 +1,17 @@
+import os
 import streamlit as st
 import json
 from datetime import datetime
+import docx
+from cryptography.fernet import Fernet
 
 # Título de la aplicación
 #st.title('Formulario de Información Personal')
 
 # Barra lateral para seleccionar el módulo de Python
-selected_module = st.sidebar.selectbox('Seleccionar módulo de Python', ['Formulario', 'Módulo 1', 'Módulo 2'])
+selected_module = st.sidebar.selectbox('Seleccionar módulo de Python', ['Formulario', 'Módulo 1', 'Módulo 2', 'Módulo 3', 'Módulo 4'])
 
+# Módulo de Formulario
 if selected_module == 'Formulario':
     # Sección de Contactos de Emergencia
     st.header('Contactos de Emergencia')
@@ -88,9 +92,6 @@ if selected_module == 'Formulario':
 # Módulo 1
 elif selected_module == 'Módulo 1':
     st.header('Beneficiarios')
-    import streamlit as st
-    import json
-    import os
 
     # Verificar si el archivo JSON existe
     if not os.path.isfile('beneficiarios.json'):
@@ -142,14 +143,10 @@ elif selected_module == 'Módulo 1':
 
     # Llamar a la función de inicio
     index()
-    # Agrega el código del módulo 1 aquí
 
 # Módulo 2
 elif selected_module == 'Módulo 2':
     st.header('Grabaciones')
-    import os
-    import streamlit as st
-    from datetime import datetime
 
     # Ruta del directorio "static/recordings"
     directorio = "static/recordings"
@@ -208,4 +205,75 @@ elif selected_module == 'Módulo 2':
                 os.remove(os.path.join('static/recordings', file))
                 st.success(f'El archivo "{file}" ha sido borrado.')
 
-    # Agrega el código del módulo 2 aquí
+# Módulo 3
+elif selected_module == 'Módulo 3':
+    st.header('Encriptar')
+
+    # Título de la aplicación
+    st.title('Encriptador de Archivos DOCX')
+
+    # Cargar archivo DOCX
+    uploaded_file = st.file_uploader('Cargar archivo DOCX', type=['docx'])
+    if uploaded_file:
+        # Leer el contenido del archivo DOCX
+        doc = docx.Document(uploaded_file)
+        contenido = '\n'.join([p.text for p in doc.paragraphs])
+
+        # Generar una clave de encriptación
+        clave = Fernet.generate_key()
+
+        # Guardar la clave en un archivo
+        archivo_clave = 'clave.key'
+        with open(archivo_clave, 'wb') as file:
+            file.write(clave)
+
+        # Encriptar el contenido del archivo
+        cipher_suite = Fernet(clave)
+        contenido_encriptado = cipher_suite.encrypt(contenido.encode())
+
+        # Guardar el contenido encriptado en un nuevo archivo
+        archivo_encriptado = 'archivo_encriptado.txt'
+        with open(archivo_encriptado, 'wb') as file:
+            file.write(contenido_encriptado)
+
+        # Mostrar el resultado en la interfaz
+        st.header('Resultado de Encriptación')
+        st.markdown('**Clave Generada:**')
+        st.code(clave.decode(), language='text')
+        st.markdown('**Contenido Encriptado:**')
+        st.code(contenido_encriptado.decode(), language='text')
+
+# Módulo 4
+elif selected_module == 'Módulo 4':
+    st.header('Desencriptar')
+
+    # Título de la aplicación
+    st.title('Desencriptador de Archivos DOCX')
+
+    # Ruta del archivo encriptado
+    archivo_encriptado = 'archivo_encriptado.txt'
+
+    # Leer el contenido encriptado del archivo
+    with open(archivo_encriptado, 'rb') as file:
+        contenido_encriptado = file.read()
+
+    # Leer la clave de encriptación del archivo
+    archivo_clave = 'clave.key'
+    with open(archivo_clave, 'rb') as file:
+        clave = file.read()
+
+    # Crear el objeto de encriptación
+    cipher_suite = Fernet(clave)
+
+    # Desencriptar el contenido
+    contenido_desencriptado = cipher_suite.decrypt(contenido_encriptado)
+
+    # Convertir el contenido desencriptado a texto
+    contenido_texto = contenido_desencriptado.decode()
+
+    # Mostrar el resultado en la interfaz
+    st.header('Resultado de Desencriptación')
+    st.markdown('**Clave Utilizada:**')
+    st.code(clave.decode(), language='text')
+    st.markdown('**Contenido Desencriptado:**')
+    st.code(contenido_texto, language='text')
