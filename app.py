@@ -151,7 +151,7 @@ elif selected_module == 'Módulo 2':
     from flask.testing import FlaskClient
 
     # Importa el módulo Flask "record.py"
-    from record import app as flask_app
+    from rec import app as flask_app
 
     # Crea una aplicación FlaskClient simulada
     client = FlaskClient(flask_app)
