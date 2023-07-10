@@ -146,64 +146,23 @@ elif selected_module == 'Módulo 1':
 
 # Módulo 2
 elif selected_module == 'Módulo 2':
-    st.header('Grabaciones')
 
-    # Ruta del directorio "static/recordings"
-    directorio = "static/recordings"
+    from flask import Flask
+    from flask.testing import FlaskClient
 
-    # Verificar si el directorio existe
-    if not os.path.exists(directorio):
-        # Crear el directorio si no existe
-        os.makedirs(directorio)
+    # Importa el módulo Flask "record.py"
+    from record import app as flask_app
 
-    # Título de la aplicación
-    st.title('Mensajes y Deseos Personales')
+    # Crea una aplicación FlaskClient simulada
+    client = FlaskClient(flask_app)
 
-    # Variables de control para la grabación de audio
-    recording = False
-    chunks = []
+    # Simula una solicitud GET al módulo Flask y obtén la respuesta HTML
+    response = client.get("/")
+    html_content = response.data.decode("utf-8")
 
-    # Función para reproducir el archivo de audio seleccionado
-    def play_audio(filename):
-        st.audio(f'static/recordings/{filename}')
+    # Muestra el resultado en un canvas de Streamlit
+    st.components.v1.html(html_content, width=800, height=600, scrolling=True)
 
-    # Función para grabar el mensaje de audio
-    def record_audio():
-        global recording, chunks
-        recording = True
-        chunks = []
-        st.warning('Grabando mensaje...')
-        st.info('Haz clic en "Detener" cuando hayas terminado.')
-
-    # Función para detener la grabación de audio
-    def stop_recording():
-        global recording, chunks
-        recording = False
-        st.success('Mensaje grabado exitosamente!')
-
-        # Lógica para guardar el mensaje de audio aquí
-
-    # Botón para grabar un nuevo mensaje de audio
-    if not recording:
-        if st.button('Grabar nuevo mensaje'):
-            record_audio()
-    else:
-        if st.button('Detener'):
-            stop_recording()
-
-    # Lista de mensajes grabados
-    st.header('Mensajes Grabados')
-    files = os.listdir('static/recordings')
-    for file in files:
-        st.write(file)
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button('Reproducir'):
-                play_audio(file)
-        with col2:
-            if st.button('Borrar'):
-                os.remove(os.path.join('static/recordings', file))
-                st.success(f'El archivo "{file}" ha sido borrado.')
 
 # Módulo 3
 elif selected_module == 'Módulo 3':
