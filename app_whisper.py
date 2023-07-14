@@ -38,4 +38,4 @@ def audio():
     # Leer el archivo de texto resultante
     transcript = open('record.txt').read()
 
-    return {"result": "ok", "text": transcript}
+    return {"result": "ok", "text": result["text"]}
