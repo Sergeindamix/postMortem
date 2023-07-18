@@ -8,6 +8,9 @@ import assemblyai as aai
 from moviepy.editor import *
 from pytube import YouTube
 from pathlib import Path
+from transformers.tools import HfAgent
+
+agent = HfAgent("https://api-inference.huggingface.co/models/bigcode/starcoder")
 
 
 aai.settings.api_key = "ea6b2c6813224320a800cd47529d3bc6"
@@ -48,6 +51,7 @@ def assemblyai_stt(audio_filename):
 
     transcript = transcriber.transcribe(audio_filename)
     st.write(transcript.text) 
+    return transcript
 
     
 
@@ -76,4 +80,10 @@ if input_source is not None:
                 transcription_text = assemblyai_stt(audio_filename)
                 st.info("Transcription:")
                 st.write(transcription_text)
+                
+                response = agent.run(query)
+
+                
+                # Mostrar la respuesta en la interfaz de Streamlit
+                st.write(response)
 
