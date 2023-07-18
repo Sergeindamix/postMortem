@@ -72,7 +72,7 @@ if input_source is not None:
         audio_filename = save_audio(input_source)
     with col2:
         st.info("Chat Below")
-        query = st.text_area("Ask your Query here...")
+        query = st.text_area("Ask your Query here...", "summerize de content of https://www.youtube.com/watch?v=jQyazt4RDTM")
         if query is not None:
             if st.button("Ask"):
                 st.info("Your Query is: " + query)
