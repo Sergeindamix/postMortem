@@ -49,7 +49,8 @@ if input_source is not None:
     with col2:
         st.info("Chat Below")
         transcript = transcriber.transcribe(audio_filename)
-        query = st.text_area("Ask your Query here...", f"summarize the content of: {transcript.text}")
+        st.write(transcript.text)
+        query = st.text_area("Ask your Query here...", f"summarize the content of: {input_source}")
         
         if query is not None:
             if st.button("Ask"):
