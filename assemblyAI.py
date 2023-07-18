@@ -2,7 +2,6 @@ import streamlit as st
 import json 
 import os 
 import time
-from dotenv import load_dotenv
 import requests
 import assemblyai as aai
 from moviepy.editor import *
