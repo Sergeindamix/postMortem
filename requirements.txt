@@ -3,3 +3,6 @@ python-docx
 flask
 pyngrok
 streamlit
+assemblyai
+moviepy
+pytube
