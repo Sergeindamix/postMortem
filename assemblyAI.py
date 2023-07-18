@@ -1,7 +1,5 @@
-import streamlit as st 
-import json 
-import os 
-import time
+import streamlit as st
+import os
 import requests
 import assemblyai as aai
 from moviepy.editor import *
@@ -9,20 +7,15 @@ from pytube import YouTube
 from pathlib import Path
 from transformers.tools import HfAgent
 
+# Configurar el agente de Hugging Face
 agent = HfAgent("https://api-inference.huggingface.co/models/bigcode/starcoder")
 
-
+# Configurar AssemblyAI
 aai.settings.api_key = "ea6b2c6813224320a800cd47529d3bc6"
 transcriber = aai.Transcriber()
 
-aai.settings.api_key = "ea6b2c6813224320a800cd47529d3bc6"
-api_token = "ea6b2c6813224320a800cd47529d3bc6"
-
 base_url = "https://api.assemblyai.com/v2"
-
-headers = {
-    "authorization": "ea6b2c6813224320a800cd47529d3bc6"
-}
+headers = {"authorization": "ea6b2c6813224320a800cd47529d3bc6"}
 
 def save_audio(url):
     yt = YouTube(url)
@@ -38,25 +31,7 @@ def save_audio(url):
     audio_filename = Path(file_name).stem+'.mp3'
     return audio_filename
 
-
-# Assembly AI speech to text
-def assemblyai_stt(audio_filename):
-    with open(audio_filename, "rb") as f:
-        response = requests.post(
-            base_url + "/transcript",
-            headers=headers,
-            files={"audio": f}
-        )
-
-    transcript = transcriber.transcribe(audio_filename)
-    st.write(transcript.text) 
-    return transcript
-
-    
-
 #Streamlit Code
-
-
 st.set_page_config(layout="wide", page_title="ChatAudio", page_icon="🔊")
 
 st.title("Chat with Your Audio using LLM")
@@ -70,19 +45,18 @@ if input_source is not None:
         st.info("Your uploaded video")
         st.video(input_source)
         audio_filename = save_audio(input_source)
+    
     with col2:
         st.info("Chat Below")
-        query = st.text_area("Ask your Query here...", "summerize de content of https://www.youtube.com/watch?v=jQyazt4RDTM")
+        transcript = transcriber.transcribe(audio_filename)
+        query = st.text_area("Ask your Query here...", f"summarize the content of: {transcript.text}")
+        
         if query is not None:
             if st.button("Ask"):
                 st.info("Your Query is: " + query)
-                transcription_text = assemblyai_stt(audio_filename)
-                st.info("Transcription:")
-                st.write(transcription_text)
                 
+                # Ejecutar la consulta con el agente de Hugging Face
                 response = agent.run(query)
-
                 
                 # Mostrar la respuesta en la interfaz de Streamlit
                 st.write(response)
-
