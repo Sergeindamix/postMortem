@@ -6,3 +6,8 @@ streamlit
 assemblyai
 moviepy
 pytube
+fastapi[all]
+pydantic==1.*
+langchain
+bs4
+tiktoken
