@@ -1,3 +1,4 @@
+#original de openai https://github.com/puigalex/GPT3.git
 import streamlit as st
 import pandas as pd
 from scipy import spatial
