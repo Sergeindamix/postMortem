@@ -5,56 +5,56 @@ import datetime
 import wikipedia
 import pyjokes
 
-listener = sr.Recognizer()
+# Inicializar el reconocimiento de voz
+recognizer = sr.Recognizer()
+
+# Inicializar el motor de texto a voz
 engine = pyttsx3.init()
+
+# Configurar voces (opcional)
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
 
-
-def talk(text):
+# Función para que Alexa responda
+def speak(text):
     engine.say(text)
     engine.runAndWait()
 
-
-def take_command():
-    try:
-        with sr.Microphone() as source:
-            print('listening...')
-            voice = listener.listen(source)
-            command = listener.recognize_google(voice)
-            command = command.lower()
-            if 'alexa' in command:
-                command = command.replace('alexa', '')
-                print(command)
-    except:
-        pass
-    return command
-
-
-def run_alexa():
-    command = take_command()
-    print(command)
-    if 'play' in command:
-        song = command.replace('play', '')
-        talk('playing ' + song)
+# Función para realizar acciones según el comando
+def alexa(command):
+    if 'reproduce' in command:
+        song = command.replace('reproduce', '')
+        speak('Reproduciendo ' + song)
         pywhatkit.playonyt(song)
-    elif 'time' in command:
+    elif 'hora' in command:
         time = datetime.datetime.now().strftime('%I:%M %p')
-        talk('Current time is ' + time)
-    elif 'who the heck is' in command:
-        person = command.replace('who the heck is', '')
-        info = wikipedia.summary(person, 1)
-        print(info)
-        talk(info)
-    elif 'date' in command:
-        talk('sorry, I have a headache')
-    elif 'are you single' in command:
-        talk('I am in a relationship with wifi')
-    elif 'joke' in command:
-        talk(pyjokes.get_joke())
+        speak('La hora actual es ' + time)
+    elif 'busca' in command:
+        topic = command.replace('busca', '')
+        info = wikipedia.summary(topic, sentences=1)
+        speak('Encontré esto en Wikipedia: ' + info)
+    elif 'chiste' in command:
+        joke = pyjokes.get_joke()
+        speak(joke)
     else:
-        talk('Please say the command again.')
+        speak('Lo siento, no entendí el comando.')
 
+# Ejecutar el asistente
+with sr.Microphone() as source:
+    print('Di algo...')
+    recognizer.adjust_for_ambient_noise(source)
+    audio = recognizer.listen(source)
 
-while True:
-    run_alexa()
+    try:
+        print('Reconociendo...')
+        command = recognizer.recognize_google(audio, language='es-ES').lower()
+        if 'alexa' in command:
+                command = command.replace('alexa', '')                
+                print('Has dicho:', command)
+                alexa(command)
+
+    except sr.UnknownValueError:
+        print('No se pudo entender el audio')
+    except sr.RequestError as e:
+        print('Error al hacer la solicitud a Google Speech Recognition:', e)
+
