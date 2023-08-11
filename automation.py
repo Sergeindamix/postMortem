@@ -1,9 +1,10 @@
+from pdf_utils import convert_pdf_to_images  # Asume que tienes esta función en un archivo llamado "convert_pdf_to_images.py"
 import streamlit as st
 from PIL import Image
 from io import BytesIO
 import tempfile
 import os
-from convert_pdf_to_images import convert_pdf_to_images
+
 import pytesseract
 from pytesseract import image_to_string
 
@@ -40,3 +41,4 @@ def main():
 if __name__ == "__main__":
     pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Ruta al ejecutable de Tesseract en tu sistema
     main()
+
