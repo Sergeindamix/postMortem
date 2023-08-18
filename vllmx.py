@@ -5,7 +5,7 @@ from vllm import LLM
 @st.cache_resource
 def get_model():
     # Crear una instancia del modelo LLM (lenguaje generativo de lenguaje natural)
-    llm = LLM(model="gpt2")
+    llm = LLM(model="JosephusCheung/Guanaco")
     return llm
 
 # Obtener el modelo (o cargar desde caché si ya existe)
