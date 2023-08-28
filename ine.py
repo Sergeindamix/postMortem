@@ -39,14 +39,15 @@ def generate_lease_agreement(arrendador_name, arrendador_address, inquilino_name
     return lease_agreement
 
 def extract_name_and_address(text):
-    start_index_name = text.find("NOMBRE") + len("NOMBRE")
-    end_index_name = text.find("DOMICILIO")
-    name = text[start_index_name:end_index_name].strip()
-
-    start_index_address = text.find("DOMICILIO") + len("DOMICILIO")
-    address = text[start_index_address:].strip()
-
-    return name, address
+    paragraphs = text.split('\n\n')
+    uppercase_paragraphs = [p for p in paragraphs if p.isupper()]
+    if len(uppercase_paragraphs) < 2:
+        return None, None
+    
+    name = uppercase_paragraphs[0]
+    address = uppercase_paragraphs[1]
+    
+    return name.strip(), address.strip()
 
 def main():
     st.title("Generador de Contrato de Arrendamiento")
@@ -67,14 +68,22 @@ def main():
             
             # Extracción de nombre y domicilio del inquilino
             inquilino_name, inquilino_address = extract_name_and_address(text)
+            start_index_name = text.find("NOMBRE") + len("NOMBRE")
+            end_index_name = text.find("DOMICILIO")
+            inquilino_name = text[start_index_name:end_index_name].strip()
             
-            # Autollenado de contrato de arrendamiento
-            lease_term = st.number_input("Plazo de Arrendamiento (meses):", value=12)
-            
-            if inquilino_name and inquilino_address and lease_term:
-                lease_agreement = generate_lease_agreement(arrendador_name, arrendador_address, inquilino_name, inquilino_address, lease_term)
-                st.subheader("Contrato de Arrendamiento:")
-                st.text(lease_agreement)
+            if inquilino_name and inquilino_address:
+                st.subheader("Datos del Inquilino:")
+                st.text(f"Nombre: {inquilino_name}")
+                st.text(f"Domicilio: {inquilino_address}")
+                
+                # Autollenado de contrato de arrendamiento
+                lease_term = st.number_input("Plazo de Arrendamiento (meses):", value=12)
+                
+                if lease_term:
+                    lease_agreement = generate_lease_agreement(arrendador_name, arrendador_address, inquilino_name, inquilino_address, lease_term)
+                    st.subheader("Contrato de Arrendamiento:")
+                    st.text(lease_agreement)
 
 if __name__ == "__main__":
     pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Ruta al ejecutable de Tesseract en tu sistema
