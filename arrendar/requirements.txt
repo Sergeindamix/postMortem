@@ -1,0 +1,4 @@
+pytesseract
+fitz
+tkcalendar
+datetime
